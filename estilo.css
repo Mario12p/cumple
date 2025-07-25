@@ -1,0 +1,182 @@
+:root {
+    --primary-color: #6a1b9a; /* Un morado elegante y cálido */
+    --text-color: #ffffff;
+    --bg-color: #1a1a2e; /* Fondo oscuro tipo galaxia */
+    --caption-bg: rgba(0, 0, 0, 0.6);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+html, body {
+    height: 100%;
+    width: 100%;
+    overflow: hidden;
+    font-family: 'Helvetica Neue', sans-serif;
+    background-color: var(--bg-color);
+}
+
+.storybook {
+    position: relative;
+    width: 100%;
+    height: 100%;
+}
+
+.slide {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    opacity: 0;
+    transition: opacity 0.8s ease-in-out;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+}
+
+.slide.active {
+    opacity: 1;
+    z-index: 10;
+}
+
+/* Estilo de la Portada */
+#cover {
+    background: linear-gradient(45deg, #4a148c, #880e4f);
+}
+.cover-content {
+    text-align: center;
+    color: var(--text-color);
+    animation: fadeIn 2s;
+}
+.cover-content h2 {
+    font-size: 1.5rem;
+    font-weight: 300;
+}
+.cover-content h1 {
+    font-size: 3rem;
+    font-weight: 700;
+    margin-bottom: 2rem;
+}
+#open-book-btn {
+    background-color: transparent;
+    border: 2px solid var(--text-color);
+    color: var(--text-color);
+    padding: 15px 30px;
+    font-size: 1.2rem;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+#open-book-btn:hover {
+    background-color: var(--text-color);
+    color: var(--primary-color);
+}
+
+/* Estilo de las páginas con fotos */
+.slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
+}
+
+.caption {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    background: var(--caption-bg);
+    color: var(--text-color);
+    padding: 30px;
+    text-align: center;
+    font-size: 1.5rem;
+    backdrop-filter: blur(5px);
+}
+.caption p {
+    max-width: 800px;
+    margin: 0 auto;
+}
+
+/* Estilo de la página final */
+.final-page-content {
+    color: white;
+    text-align: center;
+    animation: fadeIn 2s;
+}
+.final-page-content h1 { font-size: 3rem; }
+.final-page-content .fa-heart {
+    font-size: 4rem;
+    color: #e91e63;
+    margin: 2rem 0;
+    animation: pulse 1.5s infinite;
+}
+.final-page-content h3 { font-size: 1.5rem; font-weight: 300; }
+
+/* Botones de Navegación */
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white;
+    border: none;
+    font-size: 2rem;
+    padding: 15px;
+    cursor: pointer;
+    z-index: 20;
+    opacity: 0;
+    transition: opacity 0.3s;
+}
+.storybook.opened .nav-btn {
+    opacity: 0.7;
+}
+.nav-btn:hover {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+#prev-btn { left: 10px; }
+#next-btn { right: 10px; }
+.hidden { display: none; }
+
+
+/* Fondo de partículas */
+.particle-background {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+}
+.particle {
+    position: absolute;
+    background: white;
+    border-radius: 50%;
+    opacity: 0;
+    animation: rise 10s infinite linear;
+}
+
+@keyframes rise {
+    0% { transform: translateY(0); opacity: 0; }
+    10% { opacity: 0.8; }
+    100% { transform: translateY(-100vh); opacity: 0; }
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+@media (max-width: 768px) {
+    .cover-content h1, .final-page-content h1 { font-size: 2.5rem; }
+    .caption { font-size: 1.2rem; padding: 20px; }
+}

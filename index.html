@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Un Regalo para Ti</title>
+    
+    <link rel="stylesheet" href="estilo.css">
+    <link rel="manifest" href="manifest.json">
+    
+    <meta name="theme-color" content="#4a148c">
+    <link rel="apple-touch-icon" href="iconos/icon-192x192.png">
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css">
+</head>
+<body>
+
+    <div class="particle-background"></div>
+
+    <div class="storybook">
+
+        <div class="slide active" id="cover">
+            <div class="cover-content">
+                <h2>Un regalo para ti,</h2>
+                <h1>Luceni</h1>
+                <button id="open-book-btn">Toca para abrir</button>
+            </div>
+        </div>
+
+        <div class="slide">
+            <img src="fotos/foto1.jpg" alt="Recuerdo 1">
+            <div class="caption">
+                <p>¡Feliz cumpleaños a la persona más especial! Que este día te traiga tanta felicidad como tú nos das a nosotros.</p>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <img src="fotos/foto2.jpg" alt="Recuerdo 2">
+            <div class="caption">
+                <p>Recuerdo este día... ¡Qué bien la pasamos! Gracias por cada momento inolvidable.</p>
+            </div>
+        </div>
+
+        <div class="slide">
+            <img src="fotos/foto3.jpg" alt="Recuerdo 3">
+            <div class="caption">
+                <p>Admiro tu fuerza y tu increíble capacidad de dar amor. Eres una inspiración.</p>
+            </div>
+        </div>
+        
+        <div class="slide">
+            <div class="final-page-content">
+                <h1>¡Te queremos muchísimo!</h1>
+                <i class="fas fa-heart"></i>
+                <h3>Con todo el cariño, <br> [Tu Nombre]</h3>
+            </div>
+        </div>
+        
+        </div>
+
+    <button id="prev-btn" class="nav-btn"><i class="fas fa-chevron-left"></i></button>
+    <button id="next-btn" class="nav-btn"><i class="fas fa-chevron-right"></i></button>
+
+    <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,21 @@
+{
+    "name": "Un Regalo para Ti",
+    "short_name": "Regalo",
+    "start_url": "/index.html",
+    "display": "fullscreen",
+    "background_color": "#1a1a2e",
+    "theme_color": "#4a148c",
+    "orientation": "portrait",
+    "icons": [
+        {
+            "src": "iconos/icon-192x192.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "iconos/icon-512x512.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
