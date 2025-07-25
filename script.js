@@ -6,7 +6,18 @@ document.addEventListener('DOMContentLoaded', () => {
     const particleBg = document.querySelector('.particle-background');
     const finalPage = document.querySelector('.final-page');
     const openSound = document.getElementById('open-sound');
-    const closeBtn = document.getElementById('close-book-btn');
+
+    // Elementos de la nueva sorpresa final
+    const birthdayVideo = document.getElementById('birthday-video');
+    const finalMessageContainer = document.getElementById('final-message-container');
+    const surpriseMessageContainer = document.getElementById('surprise-message');
+    const surpriseBtn = document.getElementById('surprise-btn');
+    const reloadBtn = document.getElementById('reload-btn');
+
+    // Elementos del efecto "rasca y gana"
+    const scratchCanvas = document.getElementById('scratch-canvas');
+    let ctx = null;
+    let isScratching = false;
 
     // ¡Nuevas líneas para el preloader!
     const preloader = document.getElementById('preloader');
@@ -25,11 +36,9 @@ document.addEventListener('DOMContentLoaded', () => {
     function imageLoaded() {
         imagesLoadedCount++;
         if (imagesLoadedCount >= imagesToLoad.length) {
-            // Todos los recursos se han cargado
-            // Ocultar preloader después de un pequeño retraso para asegurar una transición suave
             setTimeout(() => {
                 hidePreloader();
-            }, 500); 
+            }, 500);
         }
     }
 
@@ -39,7 +48,7 @@ document.addEventListener('DOMContentLoaded', () => {
             imageLoaded();
         } else {
             img.addEventListener('load', imageLoaded);
-            img.addEventListener('error', imageLoaded); // Contar incluso si hay error
+            img.addEventListener('error', imageLoaded); 
         }
     });
 
@@ -58,12 +67,123 @@ document.addEventListener('DOMContentLoaded', () => {
         createConfetti();
     });
 
-    // Lógica para el botón de cerrar
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
+    // Lógica para la sorpresa final
+    if (birthdayVideo) {
+        birthdayVideo.onended = () => {
+            finalMessageContainer.classList.remove('hidden');
+        };
+    }
+    
+    if (surpriseBtn) {
+        surpriseBtn.addEventListener('click', () => {
+            finalMessageContainer.classList.add('hidden');
+            setTimeout(() => {
+                surpriseMessageContainer.classList.remove('hidden');
+                initScratchCard();
+            }, 1000); // Pequeño retraso para la transición
+        });
+    }
+
+    // Lógica para el botón de recargar
+    if (reloadBtn) {
+        reloadBtn.addEventListener('click', () => {
             location.reload();
         });
     }
+
+    // Código del efecto "rasca y gana"
+    function initScratchCard() {
+        if (!scratchCanvas) return;
+        
+        ctx = scratchCanvas.getContext('2d');
+        resizeCanvas();
+        window.addEventListener('resize', resizeCanvas);
+
+        // Llenar el canvas con una capa gris para rascar
+        ctx.fillStyle = '#4a148c'; // Un color sólido para la capa
+        ctx.fillRect(0, 0, scratchCanvas.width, scratchCanvas.height);
+
+        // Estilos para la brocha de "borrar"
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.lineWidth = 40; // Tamaño de la brocha
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+
+        // Eventos para el mouse
+        scratchCanvas.addEventListener('mousedown', startScratching);
+        scratchCanvas.addEventListener('mousemove', scratch);
+        scratchCanvas.addEventListener('mouseup', stopScratching);
+
+        // Eventos para el tacto
+        scratchCanvas.addEventListener('touchstart', (e) => {
+            e.preventDefault(); // Evita el scroll
+            startScratching(e.touches[0]);
+        });
+        scratchCanvas.addEventListener('touchmove', (e) => {
+            e.preventDefault(); // Evita el scroll
+            scratch(e.touches[0]);
+        });
+        scratchCanvas.addEventListener('touchend', stopScratching);
+    }
+
+    function resizeCanvas() {
+        const rect = surpriseMessageContainer.getBoundingClientRect();
+        scratchCanvas.width = rect.width;
+        scratchCanvas.height = rect.height;
+        ctx.fillStyle = '#4a148c';
+        ctx.fillRect(0, 0, scratchCanvas.width, scratchCanvas.height);
+        ctx.globalCompositeOperation = 'destination-out';
+        ctx.lineWidth = 40;
+        ctx.lineCap = 'round';
+        ctx.lineJoin = 'round';
+    }
+
+    function startScratching(e) {
+        isScratching = true;
+        ctx.beginPath();
+        ctx.moveTo(e.offsetX || e.clientX - scratchCanvas.getBoundingClientRect().left, e.offsetY || e.clientY - scratchCanvas.getBoundingClientRect().top);
+    }
+
+    function scratch(e) {
+        if (!isScratching) return;
+        ctx.lineTo(e.offsetX || e.clientX - scratchCanvas.getBoundingClientRect().left, e.offsetY || e.clientY - scratchCanvas.getBoundingClientRect().top);
+        ctx.stroke();
+
+        // Comprobar si se ha rascado lo suficiente
+        if (checkScratchCompletion()) {
+            finishScratching();
+        }
+    }
+
+    function stopScratching() {
+        isScratching = false;
+    }
+
+    function checkScratchCompletion() {
+        const pixels = ctx.getImageData(0, 0, scratchCanvas.width, scratchCanvas.height);
+        const totalPixels = pixels.data.length / 4;
+        let transparentPixels = 0;
+        for (let i = 0; i < pixels.data.length; i += 4) {
+            if (pixels.data[i + 3] === 0) {
+                transparentPixels++;
+            }
+        }
+        return (transparentPixels / totalPixels) > 0.4; // 40% rascado para revelar
+    }
+
+    function finishScratching() {
+        scratchCanvas.removeEventListener('mousedown', startScratching);
+        scratchCanvas.removeEventListener('mousemove', scratch);
+        scratchCanvas.removeEventListener('mouseup', stopScratching);
+        scratchCanvas.removeEventListener('touchstart', (e) => {});
+        scratchCanvas.removeEventListener('touchmove', (e) => {});
+        scratchCanvas.removeEventListener('touchend', stopScratching);
+
+        // Ocultar el canvas y mostrar el mensaje final y el botón
+        scratchCanvas.style.opacity = '0';
+        reloadBtn.classList.remove('hidden');
+    }
+    // Fin del código del efecto "rasca y gana"
 
     // Crear partículas de fondo
     function createParticles() {
@@ -93,12 +213,6 @@ document.addEventListener('DOMContentLoaded', () => {
             confetti.style.animationDelay = `${Math.random() * 2}s`;
             confetti.style.transform = `scale(${Math.random() + 0.5})`;
             confettiContainer.appendChild(confetti);
-        }
-        
-        // ¡NUEVA LÍNEA PARA REPRODUCIR EL VIDEO!
-        const video = document.getElementById('birthday-video');
-        if (video) {
-            video.play();
         }
     }
 

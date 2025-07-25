@@ -226,12 +226,10 @@ html, body {
 
 /* Estilos del contenedor de la sorpresa final */
 #surprise-message {
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: linear-gradient(180deg, #4a148c, #2a0058);
+    position: relative; /* Importante para posicionar el canvas encima */
+    width: 90%;
+    max-width: 600px;
+    height: 250px; /* Tamaño fijo para el efecto de rasca y gana */
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -239,33 +237,46 @@ html, body {
     color: white;
     text-align: center;
     padding: 20px;
-    z-index: 100; /* Asegurarse de que esté por encima de todo */
+    z-index: 100;
+    margin-top: 2rem;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    background: linear-gradient(45deg, #8a2387, #e94057, #f27121);
+    border-radius: 15px;
+    overflow: hidden;
+    transition: opacity 1s ease-in-out;
 }
-#surprise-message h2 {
-    font-size: 3rem;
-    animation: fadeInScale 1s ease-in-out;
+#surprise-message h2,
+#surprise-message p {
+    position: absolute;
+    z-index: 1; /* Asegurarse de que el texto esté debajo del canvas */
+    opacity: 0;
+    animation: fadeIn 2s ease-in-out forwards;
+    animation-delay: 1s;
 }
 #surprise-message p {
-    font-size: 1.2rem;
-    margin-top: 1rem;
-    animation: fadeIn 1.5s ease-in-out;
+    top: 60%;
 }
-.final-star {
-    font-size: 5rem;
-    color: #ffd700;
-    margin-bottom: 2rem;
-    animation: rotateAndScale 3s infinite ease-in-out;
+#surprise-message h2 {
+    top: 30%;
 }
 
-@keyframes rotateAndScale {
-    0% { transform: scale(1) rotate(0deg); }
-    50% { transform: scale(1.2) rotate(10deg); }
-    100% { transform: scale(1) rotate(0deg); }
+/* Estilos para el canvas del efecto "rasca y gana" */
+#scratch-canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 2; /* Por encima del texto */
+    cursor: pointer;
+    touch-action: none; /* Evita el scroll en móviles al rascar */
 }
 
-@keyframes fadeInScale {
-    from { opacity: 0; transform: scale(0.8); }
-    to { opacity: 1; transform: scale(1); }
+/* Botón de recargar que aparece al final */
+#reload-btn {
+    position: absolute;
+    bottom: 20px;
+    z-index: 3;
 }
 
 
@@ -324,6 +335,9 @@ html, body {
     }
     #surprise-message p {
         font-size: 1rem;
+    }
+    #surprise-message {
+        height: 200px;
     }
 }
 /* Estilo para el efecto de máquina de escribir */
