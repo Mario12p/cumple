@@ -92,6 +92,22 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // Código del efecto "rasca y gana"
+    const touchMoveListener = (e) => {
+        e.preventDefault(); // Evita el scroll
+        scratch(e.touches[0]);
+    };
+    const touchEndListener = () => {
+        stopScratching();
+    };
+
+    function getCoords(e) {
+        const rect = scratchCanvas.getBoundingClientRect();
+        return {
+            x: (e.clientX - rect.left) / (rect.right - rect.left) * scratchCanvas.width,
+            y: (e.clientY - rect.top) / (rect.bottom - rect.top) * scratchCanvas.height
+        };
+    }
+
     function initScratchCard() {
         if (!scratchCanvas) return;
         
@@ -99,8 +115,12 @@ document.addEventListener('DOMContentLoaded', () => {
         resizeCanvas();
         window.addEventListener('resize', resizeCanvas);
 
-        // Llenar el canvas con una capa gris para rascar
-        ctx.fillStyle = '#4a148c'; // Un color sólido para la capa
+        // Llenar el canvas con una capa para rascar
+        const gradient = ctx.createLinearGradient(0, 0, scratchCanvas.width, scratchCanvas.height);
+        gradient.addColorStop(0, '#8a2387');
+        gradient.addColorStop(0.5, '#e94057');
+        gradient.addColorStop(1, '#f27121');
+        ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, scratchCanvas.width, scratchCanvas.height);
 
         // Estilos para la brocha de "borrar"
@@ -114,24 +134,28 @@ document.addEventListener('DOMContentLoaded', () => {
         scratchCanvas.addEventListener('mousemove', scratch);
         scratchCanvas.addEventListener('mouseup', stopScratching);
 
-        // Eventos para el tacto
+        // Eventos para el tacto (corregido)
         scratchCanvas.addEventListener('touchstart', (e) => {
-            e.preventDefault(); // Evita el scroll
+            e.preventDefault();
             startScratching(e.touches[0]);
         });
-        scratchCanvas.addEventListener('touchmove', (e) => {
-            e.preventDefault(); // Evita el scroll
-            scratch(e.touches[0]);
-        });
-        scratchCanvas.addEventListener('touchend', stopScratching);
+        scratchCanvas.addEventListener('touchmove', touchMoveListener);
+        scratchCanvas.addEventListener('touchend', touchEndListener);
     }
 
     function resizeCanvas() {
         const rect = surpriseMessageContainer.getBoundingClientRect();
         scratchCanvas.width = rect.width;
         scratchCanvas.height = rect.height;
-        ctx.fillStyle = '#4a148c';
+        
+        // Redibujar la capa de rasca y gana al cambiar el tamaño
+        const gradient = ctx.createLinearGradient(0, 0, scratchCanvas.width, scratchCanvas.height);
+        gradient.addColorStop(0, '#8a2387');
+        gradient.addColorStop(0.5, '#e94057');
+        gradient.addColorStop(1, '#f27121');
+        ctx.fillStyle = gradient;
         ctx.fillRect(0, 0, scratchCanvas.width, scratchCanvas.height);
+        
         ctx.globalCompositeOperation = 'destination-out';
         ctx.lineWidth = 40;
         ctx.lineCap = 'round';
@@ -141,12 +165,14 @@ document.addEventListener('DOMContentLoaded', () => {
     function startScratching(e) {
         isScratching = true;
         ctx.beginPath();
-        ctx.moveTo(e.offsetX || e.clientX - scratchCanvas.getBoundingClientRect().left, e.offsetY || e.clientY - scratchCanvas.getBoundingClientRect().top);
+        const coords = getCoords(e);
+        ctx.moveTo(coords.x, coords.y);
     }
 
     function scratch(e) {
         if (!isScratching) return;
-        ctx.lineTo(e.offsetX || e.clientX - scratchCanvas.getBoundingClientRect().left, e.offsetY || e.clientY - scratchCanvas.getBoundingClientRect().top);
+        const coords = getCoords(e);
+        ctx.lineTo(coords.x, coords.y);
         ctx.stroke();
 
         // Comprobar si se ha rascado lo suficiente
@@ -172,12 +198,14 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     function finishScratching() {
+        // Eliminar todos los listeners
         scratchCanvas.removeEventListener('mousedown', startScratching);
         scratchCanvas.removeEventListener('mousemove', scratch);
         scratchCanvas.removeEventListener('mouseup', stopScratching);
-        scratchCanvas.removeEventListener('touchstart', (e) => {});
-        scratchCanvas.removeEventListener('touchmove', (e) => {});
-        scratchCanvas.removeEventListener('touchend', stopScratching);
+        scratchCanvas.removeEventListener('touchstart', (e) => { e.preventDefault(); startScratching(e.touches[0]); });
+        scratchCanvas.removeEventListener('touchmove', touchMoveListener);
+        scratchCanvas.removeEventListener('touchend', touchEndListener);
+        window.removeEventListener('resize', resizeCanvas);
 
         // Ocultar el canvas y mostrar el mensaje final y el botón
         scratchCanvas.style.opacity = '0';
