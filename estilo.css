@@ -190,15 +190,82 @@ html, body {
     font-weight: 300;
     color: transparent;
 }
-/* Nuevo estilo para el mensaje final */
-#final-message-container {
+
+/* CLASE GENÉRICA PARA OCULTAR ELEMENTOS */
+.hidden {
     opacity: 0;
     visibility: hidden;
-    transition: opacity 1s ease-in-out;
+    transition: opacity 1s ease-in-out, visibility 1s;
+    pointer-events: none;
 }
-#final-message-container.visible {
+.visible {
     opacity: 1;
     visibility: visible;
+    pointer-events: auto;
+}
+
+/* Estilos del botón de la sorpresa final */
+#surprise-btn, #reload-btn {
+    background-color: transparent;
+    border: 2px solid var(--text-color);
+    color: var(--text-color);
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-top: 2rem;
+    transition: all 0.3s ease;
+}
+#surprise-btn:hover, #reload-btn:hover {
+    background-color: var(--text-color);
+    color: var(--primary-color);
+}
+#surprise-btn {
+    margin-top: 2rem;
+}
+
+/* Estilos del contenedor de la sorpresa final */
+#surprise-message {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(180deg, #4a148c, #2a0058);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    color: white;
+    text-align: center;
+    padding: 20px;
+    z-index: 100; /* Asegurarse de que esté por encima de todo */
+}
+#surprise-message h2 {
+    font-size: 3rem;
+    animation: fadeInScale 1s ease-in-out;
+}
+#surprise-message p {
+    font-size: 1.2rem;
+    margin-top: 1rem;
+    animation: fadeIn 1.5s ease-in-out;
+}
+.final-star {
+    font-size: 5rem;
+    color: #ffd700;
+    margin-bottom: 2rem;
+    animation: rotateAndScale 3s infinite ease-in-out;
+}
+
+@keyframes rotateAndScale {
+    0% { transform: scale(1) rotate(0deg); }
+    50% { transform: scale(1.2) rotate(10deg); }
+    100% { transform: scale(1) rotate(0deg); }
+}
+
+@keyframes fadeInScale {
+    from { opacity: 0; transform: scale(0.8); }
+    to { opacity: 1; transform: scale(1); }
 }
 
 
@@ -236,8 +303,28 @@ html, body {
 }
 
 @media (max-width: 768px) {
-    .cover-content h1, .final-page-content h1 { font-size: 2.5rem; }
+    .cover-content h1 { font-size: 2.5rem; }
     .caption { font-size: 1.2rem; padding: 20px; }
+    
+    .final-page {
+        padding: 20px;
+    }
+    .final-page-content h1 {
+        font-size: 1.8rem;
+    }
+    .final-page-content .fa-heart {
+        font-size: 3rem;
+        margin: 1.5rem 0;
+    }
+    #birthday-video {
+        margin-top: 1rem;
+    }
+    #surprise-message h2 {
+        font-size: 2rem;
+    }
+    #surprise-message p {
+        font-size: 1rem;
+    }
 }
 /* Estilo para el efecto de máquina de escribir */
 .typewriter-text {
@@ -291,22 +378,6 @@ html, body {
         transform: translateY(100vh) rotateZ(720deg);
         opacity: 0;
     }
-}
-/* ESTILOS PARA EL BOTÓN DE CERRAR */
-#close-book-btn {
-    background-color: transparent;
-    border: 2px solid var(--text-color);
-    color: var(--text-color);
-    padding: 10px 20px;
-    font-size: 1rem;
-    border-radius: 50px;
-    cursor: pointer;
-    margin-top: 2rem;
-    transition: all 0.3s ease;
-}
-#close-book-btn:hover {
-    background-color: var(--text-color);
-    color: var(--primary-color);
 }
 /* Estilos para el video de cumpleaños */
 #birthday-video {
