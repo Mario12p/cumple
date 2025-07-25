@@ -19,10 +19,13 @@ html, body {
     background-color: var(--bg-color);
 }
 
+/* Contenedor principal que se desplaza */
 .storybook {
     position: relative;
     width: 100%;
     height: 100%;
+    overflow-y: hidden;
+    scroll-behavior: smooth;
 }
 
 .slide {
@@ -45,6 +48,7 @@ html, body {
 /* Estilo de la Portada */
 #cover {
     background: linear-gradient(45deg, #4a148c, #880e4f);
+    z-index: 20;
 }
 .cover-content {
     text-align: center;
@@ -75,15 +79,29 @@ html, body {
     color: var(--primary-color);
 }
 
-/* Estilo de las páginas con fotos */
-.slide img {
+/* Contenedor de las fotos apiladas */
+.photo-album-container {
     width: 100%;
-    height: 100%;
-    object-fit: cover; /* ¡CORRECCIÓN AQUI! */
-    position: absolute;
-    top: 0;
-    left: 0;
-    z-index: -1;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+}
+
+.photo-item {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+}
+
+.photo-item img {
+    width: 100%;
+    height: auto;
+    display: block;
+    object-fit: contain;
 }
 
 .caption {
@@ -92,9 +110,9 @@ html, body {
     width: 100%;
     background: var(--caption-bg);
     color: var(--text-color);
-    padding: 30px;
+    padding: 20px;
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     backdrop-filter: blur(5px);
 }
 .caption p {
@@ -103,46 +121,25 @@ html, body {
 }
 
 /* Estilo de la página final */
-.final-page-content {
-    color: white;
+.final-page {
+    background: linear-gradient(45deg, #4a148c, #880e4f);
+    padding: 40px;
     text-align: center;
-    animation: fadeIn 2s;
+    color: white;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
 }
-.final-page-content h1 { font-size: 3rem; }
+.final-page-content h1 { font-size: 2.5rem; }
 .final-page-content .fa-heart {
     font-size: 4rem;
     color: #e91e63;
     margin: 2rem 0;
     animation: pulse 1.5s infinite;
 }
-.final-page-content h3 { font-size: 1.5rem; font-weight: 300; }
-
-/* Botones de Navegación */
-.nav-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.4);
-    color: white;
-    border: none;
-    font-size: 2rem;
-    padding: 15px;
-    cursor: pointer;
-    z-index: 20;
-    opacity: 0;
-    transition: opacity 0.3s;
+.final-page-content h3 {
+    font-size: 1.2rem;
+    font-weight: 300;
+    color: transparent; /* Oculta el texto original */
 }
-.storybook.opened .nav-btn {
-    opacity: 0.7;
-}
-.nav-btn:hover {
-    opacity: 1;
-    background-color: rgba(0, 0, 0, 0.7);
-}
-#prev-btn { left: 10px; }
-#next-btn { right: 10px; }
-.hidden { display: none; }
-
 
 /* Fondo de partículas */
 .particle-background {
@@ -150,6 +147,7 @@ html, body {
     width: 100%;
     height: 100%;
     z-index: -2;
+    background-color: var(--bg-color);
 }
 .particle {
     position: absolute;
@@ -189,6 +187,7 @@ html, body {
     animation: 
         typing 4s steps(40, end), /* Velocidad de escritura */
         blink-caret .75s step-end infinite;
+    color: var(--text-color); /* Asegura que la animación sea visible */
 }
 
 @keyframes typing {
@@ -199,4 +198,36 @@ html, body {
 @keyframes blink-caret {
     from, to { border-color: transparent }
     50% { border-color: white }
+}
+/* Estilos para el efecto de confeti */
+#confetti-container {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.confetti {
+    position: absolute;
+    width: 10px;
+    height: 10px;
+    background-color: #ffd700; /* Color inicial del confeti */
+    opacity: 0;
+    border-radius: 50%;
+    transform-origin: center;
+    animation: confetti-fall 5s linear forwards;
+}
+
+@keyframes confetti-fall {
+    0% {
+        transform: translateY(-100vh) rotateZ(0deg);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(100vh) rotateZ(720deg);
+        opacity: 0;
+    }
 }

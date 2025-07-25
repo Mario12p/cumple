@@ -1,86 +1,21 @@
 document.addEventListener('DOMContentLoaded', () => {
     const storybook = document.querySelector('.storybook');
-    const slides = document.querySelectorAll('.slide');
     const openBtn = document.getElementById('open-book-btn');
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
-    const particleBg = document.querySelector('.particle-background');
+    const coverSlide = document.getElementById('cover');
+    const photoAlbum = document.querySelector('.photo-album-container');
 
-    let currentSlide = 0;
-
-    function typewriterEffect(element, text, speed) {
-        let i = 0;
-        element.innerHTML = '';
-        function type() {
-            if (i < text.length) {
-                element.innerHTML += text.charAt(i);
-                i++;
-                setTimeout(type, speed);
-            }
-        }
-        type();
-    }
-
-    function showSlide(index) {
-        // Desvanecer la página actual
-        const currentActiveSlide = document.querySelector('.slide.active');
-        if (currentActiveSlide) {
-            currentActiveSlide.classList.remove('active');
-        }
-        
-        // Mostrar la nueva página con un retraso
-        setTimeout(() => {
-            slides.forEach((slide, i) => {
-                if (i === index) {
-                    slide.classList.add('active');
-                    
-                    // Si la página tiene una descripción, activa el efecto de máquina de escribir
-                    const captionElement = slide.querySelector('.caption p');
-                    if (captionElement) {
-                        const originalText = captionElement.getAttribute('data-text');
-                        captionElement.innerHTML = ''; // Limpiar el texto antes de escribirlo
-                        typewriterEffect(captionElement, originalText, 50);
-                    }
-                }
-            });
-
-            // Ocultar/mostrar botones de navegación principal
-            prevBtn.classList.toggle('hidden', index <= 1);
-            nextBtn.classList.toggle('hidden', index === slides.length - 1);
-        }, 500); 
-    }
-    
-    // Al cargar la página, guarda el texto original de los captions
-    slides.forEach(slide => {
-        const captionElement = slide.querySelector('.caption p');
-        if (captionElement) {
-            captionElement.setAttribute('data-text', captionElement.textContent);
-        }
-    });
-
+    // Maneja la transición de la portada al álbum
     openBtn.addEventListener('click', () => {
-        storybook.classList.add('opened');
-        setTimeout(() => {
-            currentSlide = 1;
-            showSlide(currentSlide);
-        }, 500); 
-    });
-
-    nextBtn.addEventListener('click', () => {
-        if (currentSlide < slides.length - 1) {
-            currentSlide++;
-            showSlide(currentSlide);
+        coverSlide.classList.remove('active');
+        // Habilita el scroll vertical
+        storybook.style.overflowY = 'scroll';
+        // Desplázate directamente al inicio del álbum de fotos
+        if (photoAlbum) {
+            photoAlbum.scrollIntoView();
         }
     });
 
-    prevBtn.addEventListener('click', () => {
-        if (currentSlide > 1) {
-            currentSlide--;
-            showSlide(currentSlide);
-        }
-    });
-
-    // Lógica de partículas
+    // Crear partículas de fondo
     function createParticles() {
         for (let i = 0; i < 50; i++) {
             let particle = document.createElement('div');
@@ -95,14 +30,29 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Registrar Service Worker
+    // Registrar el Service Worker
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js')
             .then(reg => console.log('Service Worker registrado con éxito', reg))
             .catch(err => console.error('Error al registrar Service Worker', err));
     }
-
-    createParticles();
-    prevBtn.classList.add('hidden');
-    nextBtn.classList.add('hidden');
 });
+function createConfetti() {
+    const confettiContainer = document.getElementById('confetti-container');
+    if (!confettiContainer) return;
+
+    for (let i = 0; i < 100; i++) {
+        let confetti = document.createElement('div');
+        confetti.className = 'confetti';
+        confetti.style.left = `${Math.random() * 100}%`;
+        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+        confetti.style.animationDelay = `${Math.random() * 2}s`;
+        confetti.style.transform = `scale(${Math.random() + 0.5})`;
+        confettiContainer.appendChild(confetti);
+    }
+}
+
+// Llama a la función de confeti cuando se llega a la página final
+// Puedes llamar a esta función cuando se cumpla la condición.
+// En este caso, cuando el usuario abra el álbum, ya que se encuentra de forma vertical.
+createConfetti();
