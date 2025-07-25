@@ -11,6 +11,7 @@ const urlsToCache = [
     '/IMAGENES/foto3.jpeg',
     '/IMAGENES/foto4.jpeg',
     '/IMAGENES/foto5.jpeg',
+    '/VIDEO/video.mp4',
     // Recursos de Font Awesome y otros, para que el Service Worker sepa que debe intentarlos
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css',
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/webfonts/fa-solid-900.woff2',

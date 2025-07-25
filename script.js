@@ -7,7 +7,6 @@ document.addEventListener('DOMContentLoaded', () => {
     const finalPage = document.querySelector('.final-page');
     const openSound = document.getElementById('open-sound');
     const closeBtn = document.getElementById('close-book-btn');
-    const parallaxItems = document.querySelectorAll('.parallax-effect');
 
     // ¡Nuevas líneas para el preloader!
     const preloader = document.getElementById('preloader');
@@ -18,7 +17,7 @@ document.addEventListener('DOMContentLoaded', () => {
     function hidePreloader() {
         if (preloader) {
             preloader.classList.add('hidden');
-            document.body.style.overflow = 'hidden'; // Asegura que el body no se desplace
+            document.body.style.overflow = 'hidden';
         }
     }
 
@@ -59,15 +58,6 @@ document.addEventListener('DOMContentLoaded', () => {
         createConfetti();
     });
 
-    // Lógica del efecto Parallax
-    storybook.addEventListener('scroll', () => {
-        parallaxItems.forEach(item => {
-            const speed = parseFloat(item.dataset.speed) || 0.5;
-            const y = (storybook.scrollTop * speed) * -1;
-            item.style.transform = `translateY(${y}px)`;
-        });
-    });
-
     // Lógica para el botón de cerrar
     if (closeBtn) {
         closeBtn.addEventListener('click', () => {
@@ -104,6 +94,12 @@ document.addEventListener('DOMContentLoaded', () => {
             confetti.style.transform = `scale(${Math.random() + 0.5})`;
             confettiContainer.appendChild(confetti);
         }
+        
+        // ¡NUEVA LÍNEA PARA REPRODUCIR EL VIDEO!
+        const video = document.getElementById('birthday-video');
+        if (video) {
+            video.play();
+        }
     }
 
     // Observador para la animación de entrada de las fotos
@@ -127,4 +123,4 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(reg => console.log('Service Worker registrado con éxito', reg))
             .catch(err => console.error('Error al registrar Service Worker', err));
     }
-}); 
+});

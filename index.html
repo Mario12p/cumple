@@ -35,21 +35,21 @@
 
         <div class="photo-album-container">
             <div class="photo-item">
-                <img class="parallax-effect" src="IMAGENES/foto1.jpeg" alt="Recuerdo 1" data-speed="0.5">
+                <img src="IMAGENES/foto1.jpeg" alt="Recuerdo 1">
                 <div class="caption">
                     <p>¡Feliz cumpleaños a la persona más especial! Que este día te traiga tanta felicidad como tú nos das a nosotros.</p>
                 </div>
             </div>
 
             <div class="photo-item">
-                <img class="parallax-effect" src="IMAGENES/foto2.jpeg" alt="Recuerdo 2" data-speed="0.5">
+                <img src="IMAGENES/foto2.jpeg" alt="Recuerdo 2">
                 <div class="caption">
                     <p>Recuerdo este día... ¡Qué bien la pasamos! Gracias por cada momento inolvidable.</p>
                 </div>
             </div>
 
             <div class="photo-item">
-                <img class="parallax-effect" src="IMAGENES/foto3.jpeg" alt="Recuerdo 3" data-speed="0.5">
+                <img src="IMAGENES/foto3.jpeg" alt="Recuerdo 3">
                 <div class="caption">
                     <p>Admiro tu fuerza y tu increíble capacidad de dar amor. Eres una inspiración.</p>
                 </div>
@@ -57,14 +57,14 @@
 
             
             <div class="photo-item">
-                <img class="parallax-effect" src="IMAGENES/foto4.jpeg" alt="Recuerdo 4" data-speed="0.5">
+                <img src="IMAGENES/foto4.jpeg" alt="Recuerdo 4">
                 <div class="caption">
                     <p>Toca volver  a repetirlo !!</p>
                 </div>
             </div>
 
             <div class="photo-item">
-                <img class="parallax-effect" src="IMAGENES/foto5.jpeg" alt="Recuerdo 4" data-speed="0.5">
+                <img src="IMAGENES/foto5.jpeg" alt="Recuerdo 4">
                 <div class="caption">
                     <p>RECUERDOS</p>
                 </div>
@@ -75,9 +75,17 @@
                 <div class="final-page-content">
                     <h1>Gracias por ser una gran madre con mis hermanos !!</h1>
                     <i class="fas fa-heart"></i>
-                    <h3><span class="typewriter-text">Con todo mi cariño y respeto,<br> Mario.J</span></h3>
-                    <div id="confetti-container"></div>
-                    <button id="close-book-btn">Volver al inicio</button>
+                    
+                    <video id="birthday-video" controls autoplay muted playsinline loop>
+                        <source src="VIDEO/video.mp4" type="video/mp4">
+                        Tu navegador no soporta el elemento de video.
+                    </video>
+                    
+                    <div id="final-message-container" class="hidden">
+                        <h3><span class="typewriter-text">Con todo mi cariño y respeto,<br> Mario.J</span></h3>
+                        <div id="confetti-container"></div>
+                        <button id="close-book-btn">Volver al inicio</button>
+                    </div>
                 </div>
             </div>
         </div>
