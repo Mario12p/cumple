@@ -2,16 +2,48 @@ document.addEventListener('DOMContentLoaded', () => {
     const storybook = document.querySelector('.storybook');
     const openBtn = document.getElementById('open-book-btn');
     const coverSlide = document.getElementById('cover');
-    const photoAlbum = document.querySelector('.photo-album-container');
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const particleBg = document.querySelector('.particle-background');
+
+    let currentPage = 0;
+
+    // Función para mostrar la página actual
+    function showSlide(index) {
+        slides.forEach(slide => slide.classList.remove('active'));
+        slides[index].classList.add('active');
+
+        // Muestra/oculta botones de navegación
+        prevBtn.style.display = index === 0 ? 'none' : 'block';
+        nextBtn.style.display = index === slides.length - 1 ? 'none' : 'block';
+
+        // Llama a la animación de confeti en la última página
+        if (index === slides.length - 1) {
+            createConfetti();
+        }
+    }
 
     // Maneja la transición de la portada al álbum
     openBtn.addEventListener('click', () => {
         coverSlide.classList.remove('active');
-        // Habilita el scroll vertical
-        storybook.style.overflowY = 'scroll';
-        // Desplázate directamente al inicio del álbum de fotos
-        if (photoAlbum) {
-            photoAlbum.scrollIntoView();
+        storybook.style.overflowY = 'hidden'; // Asegura que no haya scroll
+        currentPage = 1; // La primera página de fotos es el índice 1
+        showSlide(currentPage);
+    });
+
+    // Navegación con los botones
+    prevBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            showSlide(currentPage);
+        }
+    });
+
+    nextBtn.addEventListener('click', () => {
+        if (currentPage < slides.length - 1) {
+            currentPage++;
+            showSlide(currentPage);
         }
     });
 
@@ -30,6 +62,24 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Función para crear confeti
+    function createConfetti() {
+        const confettiContainer = document.getElementById('confetti-container');
+        if (!confettiContainer) return;
+
+        for (let i = 0; i < 100; i++) {
+            let confetti = document.createElement('div');
+            confetti.className = 'confetti';
+            confetti.style.left = `${Math.random() * 100}%`;
+            confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
+            confetti.style.animationDelay = `${Math.random() * 2}s`;
+            confetti.style.transform = `scale(${Math.random() + 0.5})`;
+            confettiContainer.appendChild(confetti);
+        }
+    }
+
+    createParticles();
+
     // Registrar el Service Worker
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js')
@@ -37,22 +87,3 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(err => console.error('Error al registrar Service Worker', err));
     }
 });
-function createConfetti() {
-    const confettiContainer = document.getElementById('confetti-container');
-    if (!confettiContainer) return;
-
-    for (let i = 0; i < 100; i++) {
-        let confetti = document.createElement('div');
-        confetti.className = 'confetti';
-        confetti.style.left = `${Math.random() * 100}%`;
-        confetti.style.backgroundColor = `hsl(${Math.random() * 360}, 100%, 50%)`;
-        confetti.style.animationDelay = `${Math.random() * 2}s`;
-        confetti.style.transform = `scale(${Math.random() + 0.5})`;
-        confettiContainer.appendChild(confetti);
-    }
-}
-
-// Llama a la función de confeti cuando se llega a la página final
-// Puedes llamar a esta función cuando se cumpla la condición.
-// En este caso, cuando el usuario abra el álbum, ya que se encuentra de forma vertical.
-createConfetti();

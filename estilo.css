@@ -1,7 +1,7 @@
 :root {
-    --primary-color: #6a1b9a; /* Un morado elegante y cálido */
+    --primary-color: #6a1b9a;
     --text-color: #ffffff;
-    --bg-color: #1a1a2e; /* Fondo oscuro tipo galaxia */
+    --bg-color: #1a1a2e; 
     --caption-bg: rgba(0, 0, 0, 0.6);
 }
 
@@ -19,20 +19,23 @@ html, body {
     background-color: var(--bg-color);
 }
 
-/* Contenedor principal que se desplaza */
+/* Contenedor principal para el efecto de "pasar páginas" */
 .storybook {
     position: relative;
     width: 100%;
     height: 100%;
-    overflow-y: hidden;
-    scroll-behavior: smooth;
+    overflow: hidden; /* Oculta las páginas que no están activas */
 }
 
+/* Estilo de cada "página" del libro */
 .slide {
     position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     opacity: 0;
+    pointer-events: none;
     transition: opacity 0.8s ease-in-out;
     display: flex;
     justify-content: center;
@@ -42,6 +45,7 @@ html, body {
 
 .slide.active {
     opacity: 1;
+    pointer-events: auto;
     z-index: 10;
 }
 
@@ -79,29 +83,38 @@ html, body {
     color: var(--primary-color);
 }
 
-/* Contenedor de las fotos apiladas */
-.photo-album-container {
-    width: 100%;
-    max-width: 800px;
-    margin: 0 auto;
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 40px;
+/* Estilos para los botones de navegación */
+.nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white;
+    border: none;
+    font-size: 2rem;
+    padding: 15px;
+    cursor: pointer;
+    z-index: 20;
+    opacity: 0.7;
+    transition: opacity 0.3s;
 }
-
-.photo-item {
-    position: relative;
-    border-radius: 15px;
-    overflow: hidden;
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+.nav-btn:hover {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.7);
 }
+#prev-btn { left: 10px; }
+#next-btn { right: 10px; }
+.hidden { display: none; }
 
-.photo-item img {
+/* Estilo de las páginas con fotos */
+.slide img {
     width: 100%;
-    height: auto;
-    display: block;
-    object-fit: contain;
+    height: 100%;
+    object-fit: cover;
+    position: absolute;
+    top: 0;
+    left: 0;
+    z-index: -1;
 }
 
 .caption {
@@ -110,9 +123,9 @@ html, body {
     width: 100%;
     background: var(--caption-bg);
     color: var(--text-color);
-    padding: 20px;
+    padding: 30px;
     text-align: center;
-    font-size: 1.2rem;
+    font-size: 1.5rem;
     backdrop-filter: blur(5px);
 }
 .caption p {
@@ -128,18 +141,15 @@ html, body {
     color: white;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
 }
-.final-page-content h1 { font-size: 2.5rem; }
+.final-page-content h1 { font-size: 3rem; }
 .final-page-content .fa-heart {
     font-size: 4rem;
     color: #e91e63;
     margin: 2rem 0;
     animation: pulse 1.5s infinite;
 }
-.final-page-content h3 {
-    font-size: 1.2rem;
-    font-weight: 300;
-    color: transparent; /* Oculta el texto original */
-}
+.final-page-content h3 { font-size: 1.5rem; font-weight: 300; }
+
 
 /* Fondo de partículas */
 .particle-background {
