@@ -8,23 +8,62 @@ document.addEventListener('DOMContentLoaded', () => {
 
     let currentSlide = 0;
 
-    function showSlide(index) {
-        slides.forEach((slide, i) => {
-            slide.classList.remove('active');
-            if (i === index) {
-                slide.classList.add('active');
+    function typewriterEffect(element, text, speed) {
+        let i = 0;
+        element.innerHTML = '';
+        function type() {
+            if (i < text.length) {
+                element.innerHTML += text.charAt(i);
+                i++;
+                setTimeout(type, speed);
             }
-        });
+        }
+        type();
+    }
 
-        // Ocultar/mostrar botones de navegación
-        prevBtn.classList.toggle('hidden', index === 1); // Se oculta en la primera página de fotos
-        nextBtn.classList.toggle('hidden', index === slides.length - 1);
+    function showSlide(index) {
+        // Desvanecer la página actual
+        const currentActiveSlide = document.querySelector('.slide.active');
+        if (currentActiveSlide) {
+            currentActiveSlide.classList.remove('active');
+        }
+        
+        // Mostrar la nueva página con un retraso
+        setTimeout(() => {
+            slides.forEach((slide, i) => {
+                if (i === index) {
+                    slide.classList.add('active');
+                    
+                    // Si la página tiene una descripción, activa el efecto de máquina de escribir
+                    const captionElement = slide.querySelector('.caption p');
+                    if (captionElement) {
+                        const originalText = captionElement.getAttribute('data-text');
+                        captionElement.innerHTML = ''; // Limpiar el texto antes de escribirlo
+                        typewriterEffect(captionElement, originalText, 50);
+                    }
+                }
+            });
+
+            // Ocultar/mostrar botones de navegación principal
+            prevBtn.classList.toggle('hidden', index <= 1);
+            nextBtn.classList.toggle('hidden', index === slides.length - 1);
+        }, 500); 
     }
     
+    // Al cargar la página, guarda el texto original de los captions
+    slides.forEach(slide => {
+        const captionElement = slide.querySelector('.caption p');
+        if (captionElement) {
+            captionElement.setAttribute('data-text', captionElement.textContent);
+        }
+    });
+
     openBtn.addEventListener('click', () => {
-        currentSlide = 1;
         storybook.classList.add('opened');
-        showSlide(currentSlide);
+        setTimeout(() => {
+            currentSlide = 1;
+            showSlide(currentSlide);
+        }, 500); 
     });
 
     nextBtn.addEventListener('click', () => {
@@ -41,7 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    // Crear partículas de fondo
+    // Lógica de partículas
     function createParticles() {
         for (let i = 0; i < 50; i++) {
             let particle = document.createElement('div');
@@ -56,7 +95,7 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
-    // Registrar el Service Worker
+    // Registrar Service Worker
     if ('serviceWorker' in navigator) {
         navigator.serviceWorker.register('/sw.js')
             .then(reg => console.log('Service Worker registrado con éxito', reg))
@@ -64,7 +103,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     createParticles();
-    // Inicialmente ocultar botones hasta abrir el libro
     prevBtn.classList.add('hidden');
     nextBtn.classList.add('hidden');
 });

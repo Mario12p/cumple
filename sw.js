@@ -1,6 +1,5 @@
 const CACHE_NAME = 'regalo-cumple-cache-v1';
 
-// ★★★ AÑADE AQUÍ LAS RUTAS A TODAS TUS FOTOS ★★★
 const urlsToCache = [
     '/',
     '/index.html',
@@ -10,12 +9,10 @@ const urlsToCache = [
     'https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.1.1/css/all.min.css',
     '/iconos/icon-192x192.png',
     '/iconos/icon-512x512.png',
-    '/fotos/foto1.jpg',
-    '/fotos/foto2.jpg',
-    '/fotos/foto3.jpg'
-    // ...añade aquí '/fotos/foto4.jpg', etc.
+    '/IMAGENES/foto1.jpeg',
+    '/IMAGENES/foto2.jpeg',
+    '/IMAGENES/foto3.jpeg'
 ];
-// =================================================
 
 self.addEventListener('install', event => {
     event.waitUntil(
@@ -31,8 +28,7 @@ self.addEventListener('fetch', event => {
     event.respondWith(
         caches.match(event.request)
             .then(response => {
-                // Si está en caché, lo devuelve. Si no, lo busca en la red.
                 return response || fetch(event.request);
             })
     );
-}); 
+});

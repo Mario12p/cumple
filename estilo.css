@@ -79,7 +79,7 @@ html, body {
 .slide img {
     width: 100%;
     height: 100%;
-    object-fit: cover;
+    object-fit: contain; /* ¡CAMBIO AQUÍ! Esto evita que la imagen se recorte */
     position: absolute;
     top: 0;
     left: 0;
@@ -179,4 +179,24 @@ html, body {
 @media (max-width: 768px) {
     .cover-content h1, .final-page-content h1 { font-size: 2.5rem; }
     .caption { font-size: 1.2rem; padding: 20px; }
+}
+/* Estilo para el efecto de máquina de escribir */
+.typewriter-text {
+    overflow: hidden; /* Oculta el texto que no ha sido escrito */
+    border-right: .15em solid white; /* El cursor */
+    white-space: nowrap; /* Mantiene todo el texto en una línea */
+    letter-spacing: .15em; /* Espacio entre letras */
+    animation: 
+        typing 4s steps(40, end), /* Velocidad de escritura */
+        blink-caret .75s step-end infinite;
+}
+
+@keyframes typing {
+    from { width: 0 }
+    to { width: 100% }
+}
+
+@keyframes blink-caret {
+    from, to { border-color: transparent }
+    50% { border-color: white }
 }
