@@ -75,8 +75,38 @@ html, body {
     color: var(--primary-color);
 }
 
-/* Estilo de las páginas con fotos */
-.slide img {
+/* Estilo del carrusel de fotos */
+#photo-carousel-slide {
+    background-color: var(--bg-color);
+}
+
+.carousel-container {
+    position: relative;
+    width: 100%;
+    height: calc(100% - 80px); /* Ajusta la altura para dejar espacio al texto */
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
+
+.carousel-inner {
+    display: flex;
+    transition: transform 0.5s ease-in-out;
+    width: 100%;
+    flex-grow: 1;
+}
+
+.carousel-item {
+    min-width: 100%;
+    height: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.carousel-item img {
     width: 100%;
     height: 100%;
     object-fit: contain; /* ¡CAMBIO AQUÍ! Esto evita que la imagen se recorte */
@@ -96,10 +126,41 @@ html, body {
     text-align: center;
     font-size: 1.5rem;
     backdrop-filter: blur(5px);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 80px;
 }
 .caption p {
     max-width: 800px;
     margin: 0 auto;
+}
+
+.carousel-nav-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background-color: rgba(0, 0, 0, 0.4);
+    color: white;
+    border: none;
+    font-size: 1.5rem; /* Ajuste para móviles */
+    padding: 10px; /* Ajuste para móviles */
+    cursor: pointer;
+    z-index: 20;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.carousel-nav-btn:hover {
+    opacity: 1;
+    background-color: rgba(0, 0, 0, 0.7);
+}
+
+.carousel-nav-btn.prev {
+    left: 20px; /* Más margen para móviles */
+}
+.carousel-nav-btn.next {
+    right: 20px; /* Más margen para móviles */
 }
 
 /* Estilo de la página final */
@@ -117,7 +178,7 @@ html, body {
 }
 .final-page-content h3 { font-size: 1.5rem; font-weight: 300; }
 
-/* Botones de Navegación */
+/* Botones de Navegación del storybook */
 .nav-btn {
     position: absolute;
     top: 50%;
@@ -180,6 +241,7 @@ html, body {
     .cover-content h1, .final-page-content h1 { font-size: 2.5rem; }
     .caption { font-size: 1.2rem; padding: 20px; }
 }
+
 /* Estilo para el efecto de máquina de escribir */
 .typewriter-text {
     overflow: hidden; /* Oculta el texto que no ha sido escrito */
