@@ -177,6 +177,13 @@ html, body {
     text-align: center;
     color: white;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+.final-page-content {
+    width: 100%; /* Aseguramos que ocupe todo el ancho disponible */
 }
 .final-page-content h1 { font-size: 2.5rem; }
 .final-page-content .fa-heart {
@@ -226,10 +233,10 @@ html, body {
 
 /* Estilos del contenedor de la sorpresa final */
 #surprise-message {
-    position: relative; /* Importante para posicionar el canvas encima */
+    position: relative;
     width: 90%;
     max-width: 600px;
-    height: 250px; /* Tamaño fijo para el efecto de rasca y gana */
+    height: 250px;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -248,7 +255,7 @@ html, body {
 #surprise-message h2,
 #surprise-message p {
     position: absolute;
-    z-index: 1; /* Asegurarse de que el texto esté debajo del canvas */
+    z-index: 1;
     opacity: 0;
     animation: fadeIn 2s ease-in-out forwards;
     animation-delay: 1s;
@@ -267,9 +274,9 @@ html, body {
     left: 0;
     width: 100%;
     height: 100%;
-    z-index: 2; /* Por encima del texto */
+    z-index: 2;
     cursor: pointer;
-    touch-action: none; /* Evita el scroll en móviles al rascar */
+    touch-action: none;
 }
 
 /* Botón de recargar que aparece al final */
@@ -313,32 +320,41 @@ html, body {
     100% { transform: scale(1); }
 }
 
+/* MEDIA QUERY PARA MÓVILES */
 @media (max-width: 768px) {
     .cover-content h1 { font-size: 2.5rem; }
-    .caption { font-size: 1.2rem; padding: 20px; }
+    .caption { font-size: 1rem; padding: 15px; } /* Ajustamos el tamaño del caption */
     
     .final-page {
-        padding: 20px;
+        padding: 10vw; /* Usamos viewport width para un padding adaptable */
     }
+
     .final-page-content h1 {
-        font-size: 1.8rem;
+        font-size: 6vw; /* Tamaño de fuente basado en el ancho del viewport */
+        line-height: 1.2;
+        margin-top: 1rem;
     }
+    
     .final-page-content .fa-heart {
-        font-size: 3rem;
+        font-size: 8vw; /* Tamaño del corazón basado en el viewport */
         margin: 1.5rem 0;
     }
     #birthday-video {
+        width: 100%;
         margin-top: 1rem;
-    }
-    #surprise-message h2 {
-        font-size: 2rem;
-    }
-    #surprise-message p {
-        font-size: 1rem;
+        max-height: 50vh; /* Máxima altura basada en el viewport height */
     }
     #surprise-message {
-        height: 200px;
+        width: 90vw;
+        height: 40vh; /* Altura del contenedor basada en el viewport */
     }
+    #surprise-message h2 {
+        font-size: 6vw;
+    }
+    #surprise-message p {
+        font-size: 4vw;
+    }
+    
 }
 /* Estilo para el efecto de máquina de escribir */
 .typewriter-text {
