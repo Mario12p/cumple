@@ -2,50 +2,78 @@ document.addEventListener('DOMContentLoaded', () => {
     const storybook = document.querySelector('.storybook');
     const openBtn = document.getElementById('open-book-btn');
     const coverSlide = document.getElementById('cover');
-    const slides = document.querySelectorAll('.slide');
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
+    const photoItems = document.querySelectorAll('.photo-item');
     const particleBg = document.querySelector('.particle-background');
+    const finalPage = document.querySelector('.final-page');
+    const openSound = document.getElementById('open-sound');
+    const closeBtn = document.getElementById('close-book-btn');
+    const parallaxItems = document.querySelectorAll('.parallax-effect');
 
-    let currentPage = 0;
+    // ¡Nuevas líneas para el preloader!
+    const preloader = document.getElementById('preloader');
+    const imagesToLoad = document.querySelectorAll('img');
+    let imagesLoadedCount = 0;
 
-    // Función para mostrar la página actual
-    function showSlide(index) {
-        slides.forEach(slide => slide.classList.remove('active'));
-        slides[index].classList.add('active');
-
-        // Muestra/oculta botones de navegación
-        prevBtn.style.display = index === 0 ? 'none' : 'block';
-        nextBtn.style.display = index === slides.length - 1 ? 'none' : 'block';
-
-        // Llama a la animación de confeti en la última página
-        if (index === slides.length - 1) {
-            createConfetti();
+    // Función para ocultar el preloader y mostrar el contenido
+    function hidePreloader() {
+        if (preloader) {
+            preloader.classList.add('hidden');
+            document.body.style.overflow = 'hidden'; // Asegura que el body no se desplace
         }
     }
 
+    // Comprueba si todas las imágenes están cargadas
+    function imageLoaded() {
+        imagesLoadedCount++;
+        if (imagesLoadedCount >= imagesToLoad.length) {
+            // Todos los recursos se han cargado
+            // Ocultar preloader después de un pequeño retraso para asegurar una transición suave
+            setTimeout(() => {
+                hidePreloader();
+            }, 500); 
+        }
+    }
+
+    // Asignar el evento 'load' a cada imagen
+    imagesToLoad.forEach(img => {
+        if (img.complete) {
+            imageLoaded();
+        } else {
+            img.addEventListener('load', imageLoaded);
+            img.addEventListener('error', imageLoaded); // Contar incluso si hay error
+        }
+    });
+
+    // Fallback por si el evento 'load' no se dispara
+    window.addEventListener('load', () => {
+        if (imagesLoadedCount < imagesToLoad.length) {
+            hidePreloader();
+        }
+    });
+
     // Maneja la transición de la portada al álbum
     openBtn.addEventListener('click', () => {
+        openSound.play();
         coverSlide.classList.remove('active');
-        storybook.style.overflowY = 'hidden'; // Asegura que no haya scroll
-        currentPage = 1; // La primera página de fotos es el índice 1
-        showSlide(currentPage);
+        storybook.classList.add('opened');
+        createConfetti();
     });
 
-    // Navegación con los botones
-    prevBtn.addEventListener('click', () => {
-        if (currentPage > 1) {
-            currentPage--;
-            showSlide(currentPage);
-        }
+    // Lógica del efecto Parallax
+    storybook.addEventListener('scroll', () => {
+        parallaxItems.forEach(item => {
+            const speed = parseFloat(item.dataset.speed) || 0.5;
+            const y = (storybook.scrollTop * speed) * -1;
+            item.style.transform = `translateY(${y}px)`;
+        });
     });
 
-    nextBtn.addEventListener('click', () => {
-        if (currentPage < slides.length - 1) {
-            currentPage++;
-            showSlide(currentPage);
-        }
-    });
+    // Lógica para el botón de cerrar
+    if (closeBtn) {
+        closeBtn.addEventListener('click', () => {
+            location.reload();
+        });
+    }
 
     // Crear partículas de fondo
     function createParticles() {
@@ -78,6 +106,19 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }
 
+    // Observador para la animación de entrada de las fotos
+    const observer = new IntersectionObserver(entries => {
+        entries.forEach(entry => {
+            if (entry.isIntersecting) {
+                entry.target.classList.add('visible');
+            }
+        });
+    }, { threshold: 0.2 });
+
+    photoItems.forEach(item => {
+        observer.observe(item);
+    });
+
     createParticles();
 
     // Registrar el Service Worker
@@ -86,4 +127,4 @@ document.addEventListener('DOMContentLoaded', () => {
             .then(reg => console.log('Service Worker registrado con éxito', reg))
             .catch(err => console.error('Error al registrar Service Worker', err));
     }
-});
+}); 

@@ -1,7 +1,7 @@
 :root {
     --primary-color: #6a1b9a;
     --text-color: #ffffff;
-    --bg-color: #1a1a2e; 
+    --bg-color: #1a1a2e;
     --caption-bg: rgba(0, 0, 0, 0.6);
 }
 
@@ -19,33 +19,63 @@ html, body {
     background-color: var(--bg-color);
 }
 
-/* Contenedor principal para el efecto de "pasar páginas" */
+/* Estilos para la pantalla de carga (Preloader) */
+#preloader {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: var(--bg-color);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+    transition: opacity 0.5s ease-out;
+}
+#preloader.hidden {
+    opacity: 0;
+    visibility: hidden;
+}
+.spinner {
+    width: 50px;
+    height: 50px;
+    border: 5px solid rgba(255, 255, 255, 0.3);
+    border-radius: 50%;
+    border-top-color: var(--text-color);
+    animation: spin 1s linear infinite;
+}
+@keyframes spin {
+    to { transform: rotate(360deg); }
+}
+
+/* Contenedor principal que se desplaza */
 .storybook {
     position: relative;
     width: 100%;
     height: 100%;
-    overflow: hidden; /* Oculta las páginas que no están activas */
+    overflow-y: hidden;
+    scroll-behavior: smooth;
+}
+/* Esta clase se agrega con JS para habilitar el scroll */
+.storybook.opened {
+    overflow-y: scroll;
 }
 
 /* Estilo de cada "página" del libro */
 .slide {
     position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
     height: 100%;
     opacity: 0;
-    pointer-events: none;
     transition: opacity 0.8s ease-in-out;
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
 }
-
 .slide.active {
     opacity: 1;
-    pointer-events: auto;
     z-index: 10;
 }
 
@@ -83,38 +113,47 @@ html, body {
     color: var(--primary-color);
 }
 
-/* Estilos para los botones de navegación */
-.nav-btn {
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    background-color: rgba(0, 0, 0, 0.4);
-    color: white;
-    border: none;
-    font-size: 2rem;
-    padding: 15px;
-    cursor: pointer;
-    z-index: 20;
-    opacity: 0.7;
-    transition: opacity 0.3s;
+/* Contenedor principal del álbum de fotos */
+.photo-album-container {
+    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    position: relative;
 }
-.nav-btn:hover {
-    opacity: 1;
-    background-color: rgba(0, 0, 0, 0.7);
-}
-#prev-btn { left: 10px; }
-#next-btn { right: 10px; }
-.hidden { display: none; }
 
-/* Estilo de las páginas con fotos */
-.slide img {
+/* Estilo de cada foto del álbum */
+.photo-item {
+    position: relative;
+    border-radius: 15px;
+    overflow: hidden;
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
+    /* Estilos para la animación de entrada y el parallax */
+    opacity: 0;
+    transform: translateY(50px);
+    transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+    /* Necesitamos una altura fija para el efecto parallax */
+    min-height: 50vh; /* Ajusta este valor si quieres fotos más altas o más cortas */
+}
+/* La clase que activa la animación cuando está en la vista */
+.photo-item.visible {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* Estilos para el efecto Parallax */
+.parallax-effect {
+    position: absolute;
     width: 100%;
     height: 100%;
+    display: block;
     object-fit: cover;
-    position: absolute;
     top: 0;
     left: 0;
-    z-index: -1;
+    transition: transform 0.1s ease-out; /* Transición para un movimiento suave */
 }
 
 .caption {
@@ -123,10 +162,11 @@ html, body {
     width: 100%;
     background: var(--caption-bg);
     color: var(--text-color);
-    padding: 30px;
+    padding: 20px;
     text-align: center;
-    font-size: 1.5rem;
+    font-size: 1.2rem;
     backdrop-filter: blur(5px);
+    z-index: 5;
 }
 .caption p {
     max-width: 800px;
@@ -141,15 +181,18 @@ html, body {
     color: white;
     box-shadow: 0 10px 20px rgba(0, 0, 0, 0.5);
 }
-.final-page-content h1 { font-size: 3rem; }
+.final-page-content h1 { font-size: 2.5rem; }
 .final-page-content .fa-heart {
     font-size: 4rem;
     color: #e91e63;
     margin: 2rem 0;
     animation: pulse 1.5s infinite;
 }
-.final-page-content h3 { font-size: 1.5rem; font-weight: 300; }
-
+.final-page-content h3 {
+    font-size: 1.2rem;
+    font-weight: 300;
+    color: transparent; /* Oculta el texto original */
+}
 
 /* Fondo de partículas */
 .particle-background {
@@ -240,4 +283,20 @@ html, body {
         transform: translateY(100vh) rotateZ(720deg);
         opacity: 0;
     }
+}
+/* ESTILOS PARA EL BOTÓN DE CERRAR */
+#close-book-btn {
+    background-color: transparent;
+    border: 2px solid var(--text-color);
+    color: var(--text-color);
+    padding: 10px 20px;
+    font-size: 1rem;
+    border-radius: 50px;
+    cursor: pointer;
+    margin-top: 2rem;
+    transition: all 0.3s ease;
+}
+#close-book-btn:hover {
+    background-color: var(--text-color);
+    color: var(--primary-color);
 }
