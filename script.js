@@ -24,6 +24,9 @@ document.addEventListener('DOMContentLoaded', () => {
     const imagesToLoad = document.querySelectorAll('img');
     let imagesLoadedCount = 0;
 
+    // AHORA EL CONTENEDOR DEL MENSAJE FINAL SIEMPRE ES VISIBLE
+    finalMessageContainer.classList.remove('hidden');
+
     // Función para ocultar el preloader y mostrar el contenido
     function hidePreloader() {
         if (preloader) {
@@ -67,12 +70,6 @@ document.addEventListener('DOMContentLoaded', () => {
         createConfetti();
     });
 
-    // Lógica para la sorpresa final
-    if (birthdayVideo) {
-        birthdayVideo.onended = () => {
-            finalMessageContainer.classList.remove('hidden');
-        };
-    }
     
     if (surpriseBtn) {
         surpriseBtn.addEventListener('click', () => {
